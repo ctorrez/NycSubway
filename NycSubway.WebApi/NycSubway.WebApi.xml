@@ -4,6 +4,17 @@
         <name>NycSubway.WebApi</name>
     </assembly>
     <members>
+        <member name="T:NycSubway.WebApi.Controllers.StationController">
+            <summary>
+            Provides NYC station data
+            </summary>
+        </member>
+        <member name="M:NycSubway.WebApi.Controllers.StationController.GetStationEntrances">
+            <summary>
+            NYC Station Entrances
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:NycSubway.WebApi.Controllers.WeatherForecastController">
             <summary>
             Weather endpoint
