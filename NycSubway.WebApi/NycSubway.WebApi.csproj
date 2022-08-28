@@ -18,6 +18,12 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NycSubway.Core\NycSubway.Core.csproj" />
+    <ProjectReference Include="..\NycSubway.Infrastructure\NycSubway.Infrastructure.csproj" />
   </ItemGroup>
 
 
