@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NycSubway.WebApi", "NycSubway.WebApi\NycSubway.WebApi.csproj", "{A8413AE8-E8F3-49C9-BCD8-696D5C0C3000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NycSubway.Core", "NycSubway.Core\NycSubway.Core.csproj", "{28945788-E7E7-4EFD-8CB9-13DCF8E9AA9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NycSubway.Core", "NycSubway.Core\NycSubway.Core.csproj", "{28945788-E7E7-4EFD-8CB9-13DCF8E9AA9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NycSubway.Data", "NycSubway.Data\NycSubway.Data.csproj", "{F2F2FCA7-B439-4323-8515-00E6902A4A43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NycSubway.Data", "NycSubway.Data\NycSubway.Data.csproj", "{F2F2FCA7-B439-4323-8515-00E6902A4A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NycSubway.Database", "NycSubway.Database\NycSubway.Database.csproj", "{2191A6EC-F345-4ECA-ACDC-06976B3A1EE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NycSubway.Database", "NycSubway.Database\NycSubway.Database.csproj", "{2191A6EC-F345-4ECA-ACDC-06976B3A1EE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NycSubway.Infrastructure", "NycSubway.Infrastructure\NycSubway.Infrastructure.csproj", "{970626E9-654C-47D9-8809-A76E0183CCA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2191A6EC-F345-4ECA-ACDC-06976B3A1EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2191A6EC-F345-4ECA-ACDC-06976B3A1EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2191A6EC-F345-4ECA-ACDC-06976B3A1EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{970626E9-654C-47D9-8809-A76E0183CCA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{970626E9-654C-47D9-8809-A76E0183CCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{970626E9-654C-47D9-8809-A76E0183CCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{970626E9-654C-47D9-8809-A76E0183CCA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

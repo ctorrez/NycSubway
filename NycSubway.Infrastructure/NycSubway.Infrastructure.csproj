@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SeedData\DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SeedData\DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="28.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NycSubway.Core\NycSubway.Core.csproj" />
+  </ItemGroup>
+
+</Project>
