@@ -1,20 +1,20 @@
 ﻿using NycSubway.Core.Services.GeoDistance;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NycSubway.Core.Services.Station
 {
     public class StationService
     {
-        public StationService()
-        {
+        private readonly IStationRepo _repo;
 
+        public StationService(IStationRepo repo)
+        {
+            _repo = repo;
         }
 
         public List<StationEntrance> GetStationEntrances()
         {
-            throw new NotImplementedException();
+            return _repo.GetStationEntrances();
         }
 
         public GeoDistance GetStationDistance(StationEntrance entrance1, StationEntrance entrance2)
