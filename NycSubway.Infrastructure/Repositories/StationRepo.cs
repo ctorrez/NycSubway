@@ -1,13 +1,11 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration;
-using NycSubway.Core.Common;
 using NycSubway.Core.Services.Station;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace NycSubway.Infrastructure.Repositories
 {
@@ -41,16 +39,19 @@ namespace NycSubway.Infrastructure.Repositories
 
             var values = geom.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
+            var lat = values[1].Replace("(", "");
+            var longitude = values[2].Replace(")", "");
+
             return new GeoPoint()
             {
-                Latitude = double.Parse(values[1]),
-                Longitude = double.Parse(values[2])
+                Latitude = double.Parse(lat),
+                Longitude = double.Parse(longitude)
             };
         }
 
         private static List<SubwayEntranceCsv> GetSubwayEntranceCsvs()
         {
-            var data = ResourceHelper.ReadResource("DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv");
+            var data = ReadResource("DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv");
 
             using (var reader = new StringReader(data))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -60,6 +61,20 @@ namespace NycSubway.Infrastructure.Repositories
                 var records = csv.GetRecords<SubwayEntranceCsv>().ToList();
 
                 return records;
+            }
+        }
+
+        private static string ReadResource(string name)
+        {
+            // https://stackoverflow.com/questions/3314140/how-to-read-embedded-resource-text-file
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourcePath = assembly.GetManifestResourceNames()
+                    .First(str => str.EndsWith(name));
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
             }
         }
     }
