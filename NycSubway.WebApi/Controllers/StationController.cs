@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NycSubway.Core.Services.Station;
 using NycSubway.WebApi.Models;
-using NycSubway.WebApi.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NycSubway.WebApi.Controllers
 {
@@ -18,9 +15,9 @@ namespace NycSubway.WebApi.Controllers
     {
         private StationService service;
 
-        public StationController()
+        public StationController(StationService service)
         {
-            service = new StationService();
+            this.service = service;
         }
 
         /// <summary>
@@ -32,6 +29,17 @@ namespace NycSubway.WebApi.Controllers
         public IActionResult GetStationEntrances()
         {
             return Ok(service.GetStationEntrances());
+        }
+
+        /// <summary>
+        /// Get the distance between two station entrances
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("station-distance")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntrance>))]
+        public IActionResult GetStationDistance(StationDistanceRequest request)
+        {
+            return Ok(service.GetStationDistance(request.Entrance1, request.Entrance2));
         }
     }
 }

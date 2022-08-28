@@ -15,6 +15,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:NycSubway.WebApi.Controllers.StationController.GetStationDistance(NycSubway.WebApi.Models.StationDistanceRequest)">
+            <summary>
+            Get the distance between two station entrances
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:NycSubway.WebApi.Controllers.WeatherForecastController">
             <summary>
             Weather endpoint
