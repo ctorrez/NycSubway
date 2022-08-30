@@ -21,6 +21,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:NycSubway.WebApi.Controllers.UserController">
+            <summary>
+            User Action Controller
+            </summary>
+        </member>
+        <member name="M:NycSubway.WebApi.Controllers.UserController.SaveStation(NycSubway.Core.Services.Station.StationEntrance)">
+            <summary>
+            Save a user’s frequently used station entrances
+            </summary>
+            <param name="entrance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NycSubway.WebApi.Controllers.UserController.GetStations">
+            <summary>
+            Retrieve a user’s frequently used station entrances
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:NycSubway.WebApi.Controllers.WeatherForecastController">
             <summary>
             Weather endpoint
