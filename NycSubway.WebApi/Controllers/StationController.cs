@@ -36,7 +36,6 @@ namespace NycSubway.WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("station-distance")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntrance>))]
         public IActionResult GetStationDistance(StationDistanceRequest request)
         {
             return Ok(service.GetStationDistance(request.Entrance1, request.Entrance2));
