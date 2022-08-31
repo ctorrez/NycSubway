@@ -1,0 +1,45 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using NycSubway.Database.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NycSubway.WebApi.Extensions
+{
+    public class AppUser
+    {
+
+    }
+
+    public static class IdentityServiceExtensions
+    {
+        public static IServiceCollection AddIdentityService(this IServiceCollection services,
+            IConfiguration _configuration)
+        {
+            var builder = services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>();
+
+            builder.AddSignInManager<SignInManager<IdentityUser>>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"])),
+                        ValidIssuer = _configuration["Token:Issuer"],
+                        ValidateIssuer = true,
+                        ValidateAudience = false
+
+                    };
+                });
+            return services;
+        }
+    }
+}
