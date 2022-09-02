@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NycSubway.Core.Services.Station;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace NycSubway.WebApi.Controllers
     /// <summary>
     /// User Action Controller
     /// </summary>
+    [Authorize()]
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase

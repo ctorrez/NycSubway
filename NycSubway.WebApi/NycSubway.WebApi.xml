@@ -4,6 +4,11 @@
         <name>NycSubway.WebApi</name>
     </assembly>
     <members>
+        <member name="T:NycSubway.WebApi.Controllers.AccountController">
+            <summary>
+            Authentication Endpoint
+            </summary>
+        </member>
         <member name="T:NycSubway.WebApi.Controllers.StationController">
             <summary>
             Provides NYC station data
