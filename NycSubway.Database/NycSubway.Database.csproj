@@ -13,4 +13,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NycSubway.Core\NycSubway.Core.csproj" />
+    <ProjectReference Include="..\NycSubway.Data\NycSubway.Data.csproj" />
+  </ItemGroup>
+
 </Project>
