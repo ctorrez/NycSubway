@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NycSubway.Database.Context;
 using NycSubway.Database.Identity;
 using NycSubway.WebApi.Extensions;
 using System;
@@ -77,6 +78,11 @@ namespace NycSubway.WebApi
             services.AddDbContext<IdentityContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AuthConnectionString"))
             );
+
+            services.AddDbContext<SubwayDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("NycSubwayConnectionString"))
+            );
+
             services.AddIdentityService(Configuration);
             services.AddControllers();
             services.AddApplicationServices();
