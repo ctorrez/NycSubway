@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NycSubway.Database.Identity;
 
-namespace NycSubway.Database.Migrations
+namespace NycSubway.Database.Migrations.Identity
 {
     [DbContext(typeof(IdentityContext))]
     [Migration("20220831002920_AddAuthentication")]

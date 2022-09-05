@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace NycSubway.Database.Migrations
+namespace NycSubway.Database.Migrations.Identity
 {
     public partial class AddAuthentication : Migration
     {
