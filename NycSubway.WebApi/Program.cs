@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NycSubway.Database.Context;
 using NycSubway.Database.Identity;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,10 @@ namespace NycSubway.WebApi
 
                 var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
                 var identityContext = services.GetRequiredService<IdentityContext>();
+                var subwayContext = services.GetRequiredService<SubwayDbContext>();
 
                 await identityContext.Database.MigrateAsync();
-                await IdentityDbContextSeed.SeedUserData(userManager);
+                await IdentityDbContextSeed.SeedUserData(userManager, subwayContext);
             }
 
             host.Run();
