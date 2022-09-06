@@ -1,0 +1,88 @@
+﻿using CsvHelper;
+using NycSubway.Data.Entities;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace NycSubway.Database.Context
+{
+    internal class SubwayData
+    {
+        class Point
+        {
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
+        }
+
+        public static List<StationEntrance> GetStationEntrances()
+        {
+            var results = new List<StationEntrance>();
+
+            var csv = GetSubwayEntranceCsvs();
+
+            foreach(var x in csv)
+            {
+                var point = GetGeoPoint(x.Geom);
+
+                results.Add(new StationEntrance()
+                {
+                    Id = 0,
+                    Name = x.Name,
+                    Latitude = point.Latitude,
+                    Longitude = point.Longitude
+                });
+            }
+
+            return results;
+        }
+
+        private static Point GetGeoPoint(string geom)
+        {
+            // POINT (-73.86835600032798 40.84916900104506)
+
+            var values = geom.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            var lat = values[1].Replace("(", "");
+            var longitude = values[2].Replace(")", "");
+
+            return new Point()
+            {
+                Latitude = double.Parse(lat),
+                Longitude = double.Parse(longitude)
+            };
+        }
+
+        private static List<SubwayEntranceCsv> GetSubwayEntranceCsvs()
+        {
+            var data = ReadResource("DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv");
+
+            using (var reader = new StringReader(data))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap<SubwayEntranceCsvMap>();
+
+                var records = csv.GetRecords<SubwayEntranceCsv>().ToList();
+
+                return records;
+            }
+        }
+
+        private static string ReadResource(string name)
+        {
+            // https://stackoverflow.com/questions/3314140/how-to-read-embedded-resource-text-file
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourcePath = assembly.GetManifestResourceNames()
+                    .First(str => str.EndsWith(name));
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+    }
+}

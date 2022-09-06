@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SeedData\DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SeedData\DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="28.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
