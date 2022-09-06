@@ -25,6 +25,7 @@ namespace NycSubway.Infrastructure.Identity
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
@@ -32,8 +33,8 @@ namespace NycSubway.Infrastructure.Identity
 
             var TokenDesc = new SecurityTokenDescriptor
             {
+                Audience = user.UserName,
                 Subject = new ClaimsIdentity(claims),
-                Audience = user.Email,
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = credentials,
                 Issuer = _configuration["Token:Issuer"],

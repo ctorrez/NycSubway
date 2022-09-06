@@ -46,6 +46,7 @@ namespace NycSubway.WebApi.Controllers
 
             var dto = new UserData()
             {
+                UserName = user.UserName,
                 Email = user.Email,
             };
 
