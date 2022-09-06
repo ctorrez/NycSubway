@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NycSubway.Core.Services.Station;
+using NycSubway.Core.Services.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace NycSubway.WebApi.Controllers
 {
@@ -16,9 +17,11 @@ namespace NycSubway.WebApi.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        public UserController()
-        {
+        private readonly IUserDataService service;
 
+        public UserController(IUserDataService userDataService)
+        {
+            service = userDataService;
         }
 
         /// <summary>
@@ -28,7 +31,20 @@ namespace NycSubway.WebApi.Controllers
         [HttpGet("stations")]
         public IActionResult GetStations()
         {
-            return Ok();
+            var user = HttpContext.User;
+
+            if (user == null)
+            {
+                return BadRequest("Bad Request");
+            }
+
+            var email = user.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
+            var userModel = service.GetUserReadModel(email);
+
+            var stations = service.GetStationEntrances(userModel);
+
+            return Ok(stations);
         }
 
         /// <summary>
@@ -39,7 +55,20 @@ namespace NycSubway.WebApi.Controllers
         [HttpPost("save-station")]
         public IActionResult SaveStation(StationEntrance entrance)
         {
-            return Ok();
+            var user = HttpContext.User;
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var email = user.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
+            var userModel = service.GetUserReadModel(email);
+
+            var response = service.SaveStationEntrance(userModel, entrance);
+
+            return Ok(response);
         }
     }
 }
