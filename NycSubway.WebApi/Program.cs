@@ -30,6 +30,7 @@ namespace NycSubway.WebApi
 
                 await identityContext.Database.MigrateAsync();
                 await IdentityDbContextSeed.SeedUserData(userManager, subwayContext);
+                SubwayDbContextSeed.SeedNycData(subwayContext);
             }
 
             host.Run();

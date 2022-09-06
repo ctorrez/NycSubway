@@ -25,6 +25,8 @@ namespace NycSubway.Database.Identity
                     FirstName = "Christian",
                     LastName = "Torrez"
                 });
+
+                context.SaveChanges();
             }
         }
     }
