@@ -25,7 +25,7 @@ namespace NycSubway.WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("station-entrances")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntrance>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntranceModel>))]
         public IActionResult GetStationEntrances()
         {
             return Ok(service.GetStationEntrances());

@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NycSubway.Core\NycSubway.Core.csproj" />
+    <ProjectReference Include="..\NycSubway.Database\NycSubway.Database.csproj" />
+    <ProjectReference Include="..\NycSubway.Data\NycSubway.Data.csproj" />
   </ItemGroup>
 
 </Project>

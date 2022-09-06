@@ -37,7 +37,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:NycSubway.WebApi.Controllers.UserController.SaveStation(NycSubway.Core.Services.Station.StationEntrance)">
+        <member name="M:NycSubway.WebApi.Controllers.UserController.SaveStation(NycSubway.Core.Services.Station.StationEntranceModel)">
             <summary>
             Save a user’s frequently used station entrances
             </summary>

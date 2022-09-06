@@ -7,7 +7,7 @@ namespace NycSubway.Core.Services.User
     public interface IUserDataService
     {
         UserReadModel GetUserReadModel(string email);
-        List<StationEntrance> GetStationEntrances(UserReadModel model);
-        ResultResponse SaveStationEntrance(UserReadModel model, StationEntrance entrance);
+        List<StationEntranceModel> GetStationEntrances(UserReadModel model);
+        ResultResponse SaveStationEntrance(UserReadModel model, StationEntranceModel entranceModel);
     }
 }

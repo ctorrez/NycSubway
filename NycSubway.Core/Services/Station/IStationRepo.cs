@@ -4,6 +4,6 @@ namespace NycSubway.Core.Services.Station
 {
     public interface IStationRepo
     {
-        List<StationEntrance> GetStationEntrances();
+        List<StationEntranceModel> GetStationEntrances();
     }
 }

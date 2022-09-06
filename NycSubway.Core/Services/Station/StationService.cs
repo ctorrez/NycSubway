@@ -12,12 +12,12 @@ namespace NycSubway.Core.Services.Station
             _repo = repo;
         }
 
-        public List<StationEntrance> GetStationEntrances()
+        public List<StationEntranceModel> GetStationEntrances()
         {
             return _repo.GetStationEntrances();
         }
 
-        public GeoDistance GetStationDistance(StationEntrance entrance1, StationEntrance entrance2)
+        public GeoDistance GetStationDistance(StationEntranceModel entrance1, StationEntranceModel entrance2)
         {
             var c1 = new Coordinates(entrance1.Point.Latitude, entrance1.Point.Longitude);
             var c2 = new Coordinates(entrance2.Point.Latitude, entrance2.Point.Longitude);

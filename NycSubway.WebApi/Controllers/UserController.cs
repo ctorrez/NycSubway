@@ -53,7 +53,7 @@ namespace NycSubway.WebApi.Controllers
         /// <param name="entrance"></param>
         /// <returns></returns>
         [HttpPost("save-station")]
-        public IActionResult SaveStation(StationEntrance entrance)
+        public IActionResult SaveStation(StationEntranceModel entrance)
         {
             var user = HttpContext.User;
 

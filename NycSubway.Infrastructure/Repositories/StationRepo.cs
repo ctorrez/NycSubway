@@ -16,14 +16,14 @@ namespace NycSubway.Infrastructure.Repositories
 
         }
 
-        public List<StationEntrance> GetStationEntrances()
+        public List<StationEntranceModel> GetStationEntrances()
         {
-            var stations = new List<StationEntrance>();
+            var stations = new List<StationEntranceModel>();
             var csvs = GetSubwayEntranceCsvs();
 
             foreach(var x in csvs)
             {
-                stations.Add(new StationEntrance()
+                stations.Add(new StationEntranceModel()
                 {
                     Name = x.Name,
                     Point = GetGeoPoint(x.Geom)
