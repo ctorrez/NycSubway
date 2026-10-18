@@ -72,16 +72,39 @@ namespace NycSubway.WebApi
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                if (File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
             });
 
+            var useSqlite = Configuration.GetValue<bool>("UseSqlite", true);
+            var authConnection = Configuration.GetConnectionString("AuthConnectionString");
+            var subwayConnection = Configuration.GetConnectionString("NycSubwayConnectionString");
+
             services.AddDbContext<IdentityContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AuthConnectionString"))
-            );
+            {
+                if (useSqlite)
+                {
+                    options.UseSqlite(authConnection);
+                }
+                else
+                {
+                    options.UseSqlServer(authConnection);
+                }
+            });
 
             services.AddDbContext<SubwayDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("NycSubwayConnectionString"))
-            );
+            {
+                if (useSqlite)
+                {
+                    options.UseSqlite(subwayConnection);
+                }
+                else
+                {
+                    options.UseSqlServer(subwayConnection);
+                }
+            });
 
             services.AddIdentityService(Configuration);
             services.AddControllers();

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,16 +13,9 @@ namespace NycSubway.WebApi.Extensions
         public static IServiceCollection AddIdentityService(this IServiceCollection services,
             IConfiguration _configuration)
         {
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<IdentityContext>()
-            //    .AddDefaultTokenProviders()
-            //    .AddSignInManager<SignInManager<IdentityUser>>();
-
-            var builder = services.AddIdentityCore<IdentityUser>();
-
-            builder = new IdentityBuilder(builder.UserType, builder.Services);
-            builder.AddEntityFrameworkStores<IdentityContext>();
-            builder.AddSignInManager<SignInManager<IdentityUser>>();
+            services.AddIdentityCore<IdentityUser>()
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddSignInManager<SignInManager<IdentityUser>>();
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

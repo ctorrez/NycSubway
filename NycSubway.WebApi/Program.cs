@@ -24,13 +24,41 @@ namespace NycSubway.WebApi
             {
                 var services = scope.ServiceProvider;
 
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-                var identityContext = services.GetRequiredService<IdentityContext>();
-                var subwayContext = services.GetRequiredService<SubwayDbContext>();
+                var logger = services.GetRequiredService<ILogger<Program>>();
 
-                await identityContext.Database.MigrateAsync();
-                await IdentityDbContextSeed.SeedUserData(userManager, subwayContext);
-                SubwayDbContextSeed.SeedNycData(subwayContext);
+                try
+                {
+                    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                    var identityContext = services.GetRequiredService<IdentityContext>();
+                    var subwayContext = services.GetRequiredService<SubwayDbContext>();
+
+                    if (identityContext.Database.IsSqlite())
+                    {
+                        await identityContext.Database.EnsureCreatedAsync();
+                    }
+                    else
+                    {
+                        await identityContext.Database.MigrateAsync();
+                    }
+
+                    if (subwayContext.Database.IsSqlite())
+                    {
+                        await subwayContext.Database.EnsureCreatedAsync();
+                    }
+                    else
+                    {
+                        await subwayContext.Database.MigrateAsync();
+                    }
+
+                    await IdentityDbContextSeed.SeedUserData(userManager, subwayContext);
+                    SubwayDbContextSeed.SeedNycData(subwayContext);
+                    logger.LogInformation("Database initialized and seeded successfully.");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred during database initialization or seeding.");
+                    throw;
+                }
             }
 
             host.Run();

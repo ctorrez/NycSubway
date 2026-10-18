@@ -1,4 +1,4 @@
-﻿using CsvHelper;
+using CsvHelper;
 using NycSubway.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -45,13 +45,13 @@ namespace NycSubway.Database.Context
 
             var values = geom.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            var lat = values[1].Replace("(", "");
-            var longitude = values[2].Replace(")", "");
+            var longitudeStr = values[1].Replace("(", "").Trim();
+            var latitudeStr = values[2].Replace(")", "").Trim();
 
             return new Point()
             {
-                Latitude = double.Parse(lat),
-                Longitude = double.Parse(longitude)
+                Latitude = double.Parse(latitudeStr, CultureInfo.InvariantCulture),
+                Longitude = double.Parse(longitudeStr, CultureInfo.InvariantCulture)
             };
         }
 
