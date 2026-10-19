@@ -1,3 +1,4 @@
+using NycSubway.Core.Models;
 using NycSubway.Core.Services.GeoDistance;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace NycSubway.Core.Services.Station
     public interface IStationService
     {
         Task<List<StationEntranceModel>> GetStationEntrancesAsync();
+        Task<PagedResult<StationEntranceModel>> GetStationEntrancesAsync(string search, int page, int pageSize);
         GeoDistance GetStationDistance(StationEntranceModel entrance1, StationEntranceModel entrance2);
         Task<List<NearbyStationEntranceModel>> GetNearbyStationEntrancesAsync(
             GeoPoint userLocation, double radiusMiles, int limit = 10);
@@ -28,6 +30,11 @@ namespace NycSubway.Core.Services.Station
         public async Task<List<StationEntranceModel>> GetStationEntrancesAsync()
         {
             return await _repo.GetStationEntrancesAsync();
+        }
+
+        public async Task<PagedResult<StationEntranceModel>> GetStationEntrancesAsync(string search, int page, int pageSize)
+        {
+            return await _repo.GetStationEntrancesAsync(search, page, pageSize);
         }
 
         public GeoDistance GetStationDistance(StationEntranceModel entrance1, StationEntranceModel entrance2)
