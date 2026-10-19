@@ -137,22 +137,13 @@ flowchart TD
 
 ---
 
-### Phase 5: GitHub Portfolio Polish (README & Presentation)
+### Phase 5: GitHub Portfolio Polish (README & Presentation) (Completed)
 
-- [ ] **Create a Professional `README.md`**:
-  - **Badges**: .NET 8, C#, Swagger, xUnit.
-  - **Overview**: Summary of the project, features, and Clean Architecture principles used.
-  - **Architecture Diagram**: Mermaid diagram explaining layer responsibilities.
-  - **Quick Start Guide**:
-    ```bash
-    git clone https://github.com/ctorrez/NycSubway.git
-    cd NycSubway
-    dotnet run --project NycSubway.WebApi
-    ```
-  - **Swagger & Endpoints Overview**:
-    - `POST /api/account/login` (Seed credentials: `ctorrez` / `Challenge#2022`)
-    - `GET /station/station-entrances`
-    - `POST /station/station-distance`
-    - `GET /api/user/stations` (Authorized)
-    - `POST /api/user/save-station` (Authorized)
-  - **Running Tests**: `dotnet test` command instructions.
+- [x] **Create a Professional `README.md`**:
+  - **Badges**: .NET 8 LTS, C# 12, MSTest, Swagger/OpenAPI, SQLite.
+  - **Overview**: NYC Subway API query engine, great-circle distance calculator, and user bookmarking.
+  - **Architecture Diagram**: Clean Mermaid diagram explaining the 4-layer structure.
+  - **Architecture Decision Records (ADRs)**: Documented rationale for dual DbContexts (Bounded Contexts & SRP), zero-config SQLite, and lean Haversine calculator.
+  - **Quick Start Guide**: Step-by-step instructions for `dotnet test` and `dotnet run`.
+  - **API Documentation & Pre-Seeded Credentials**: Listed test credentials (`ctorrez` / `Challenge#2022`) and sample request/response payloads.
+  - **Docker & Testing**: Container build instructions and test coverage summary.
