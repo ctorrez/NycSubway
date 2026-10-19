@@ -3,7 +3,9 @@ using NycSubway.Core.Entities;
 using NycSubway.Core.Models;
 using NycSubway.Core.Services.GeoDistance;
 using NycSubway.Core.Services.Station;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NycSubway.Tests.Station
@@ -25,9 +27,9 @@ namespace NycSubway.Tests.Station
             {
                 var filtered = string.IsNullOrWhiteSpace(search)
                     ? EntrancesToReturn
-                    : EntrancesToReturn.FindAll(x => x.Name.Contains(search, System.StringComparison.OrdinalIgnoreCase));
+                    : EntrancesToReturn.FindAll(x => x.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
 
-                var items = filtered.GetRange((page - 1) * pageSize, Math.Min(pageSize, Math.Max(0, filtered.Count - (page - 1) * pageSize)));
+                var items = filtered.Skip((page - 1) * pageSize).Take(pageSize).ToList();
                 return Task.FromResult(new PagedResult<StationEntranceModel>(items, filtered.Count, page, pageSize));
             }
 
@@ -163,6 +165,78 @@ namespace NycSubway.Tests.Station
             // Assert
             Assert.IsNotNull(results);
             Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod]
+        public async Task GetStationEntrancesAsync_WithPagination_ReturnsCorrectPageAndMetadata()
+        {
+            // Arrange
+            _repo.EntrancesToReturn = new List<StationEntranceModel>
+            {
+                new StationEntranceModel { Name = "Station 1" },
+                new StationEntranceModel { Name = "Station 2" },
+                new StationEntranceModel { Name = "Station 3" },
+                new StationEntranceModel { Name = "Station 4" },
+                new StationEntranceModel { Name = "Station 5" }
+            };
+
+            // Act - Request page 2 with page size 2
+            var result = await _service.GetStationEntrancesAsync(null, page: 2, pageSize: 2);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5, result.TotalCount);
+            Assert.AreEqual(2, result.Page);
+            Assert.AreEqual(2, result.PageSize);
+            Assert.AreEqual(3, result.TotalPages);
+            Assert.IsTrue(result.HasPreviousPage);
+            Assert.IsTrue(result.HasNextPage);
+            Assert.AreEqual(2, result.Items.Count);
+            Assert.AreEqual("Station 3", result.Items[0].Name);
+            Assert.AreEqual("Station 4", result.Items[1].Name);
+        }
+
+        [TestMethod]
+        public async Task GetStationEntrancesAsync_WithSearchTerm_ReturnsFilteredResults()
+        {
+            // Arrange
+            _repo.EntrancesToReturn = new List<StationEntranceModel>
+            {
+                new StationEntranceModel { Name = "34 St - Herald Sq" },
+                new StationEntranceModel { Name = "Times Sq - 42 St" },
+                new StationEntranceModel { Name = "Grand Central - 42 St" }
+            };
+
+            // Act
+            var result = await _service.GetStationEntrancesAsync("Central", page: 1, pageSize: 10);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.TotalCount);
+            Assert.AreEqual(1, result.Items.Count);
+            Assert.AreEqual("Grand Central - 42 St", result.Items[0].Name);
+        }
+
+        [TestMethod]
+        public void PagedResult_MetadataCalculations_HandleEdgeCases()
+        {
+            // Single page scenario
+            var singlePage = new PagedResult<string>(new List<string> { "A", "B" }, totalCount: 2, page: 1, pageSize: 10);
+            Assert.AreEqual(1, singlePage.TotalPages);
+            Assert.IsFalse(singlePage.HasPreviousPage);
+            Assert.IsFalse(singlePage.HasNextPage);
+
+            // Last page scenario
+            var lastPage = new PagedResult<string>(new List<string> { "E" }, totalCount: 5, page: 3, pageSize: 2);
+            Assert.AreEqual(3, lastPage.TotalPages);
+            Assert.IsTrue(lastPage.HasPreviousPage);
+            Assert.IsFalse(lastPage.HasNextPage);
+
+            // Zero items scenario
+            var emptyPage = new PagedResult<string>(new List<string>(), totalCount: 0, page: 1, pageSize: 10);
+            Assert.AreEqual(0, emptyPage.TotalPages);
+            Assert.IsFalse(emptyPage.HasPreviousPage);
+            Assert.IsFalse(emptyPage.HasNextPage);
         }
     }
 }

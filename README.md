@@ -110,11 +110,39 @@ To test authorized endpoints, use the pre-seeded account:
 | Method | Endpoint | Auth | Description |
 | :--- | :--- | :---: | :--- |
 | `POST` | `/api/account/login` | No | Authenticate user and obtain a JWT Bearer token |
-| `GET` | `/station/station-entrances` | No | Retrieve all NYC subway station entrances |
+| `GET` | `/station/station-entrances` | No | Retrieve NYC subway entrances (supports `?search=`, `?page=`, `?pageSize=`) |
 | `POST` | `/station/station-distance` | No | Calculate the great-circle distance between two stations |
 | `GET` | `/station/nearby` | No | Find nearest subway entrances within a radius (miles) |
 | `GET` | `/api/user/stations` | **JWT** | Get the authenticated user's saved stations |
 | `POST` | `/api/user/save-station` | **JWT** | Bookmark a station entrance for the authenticated user |
+
+### Sample: Paginated & Filtered Station Entrances
+Search for entrances matching `"Herald"` with pagination:
+```http
+GET /station/station-entrances?search=Herald&page=1&pageSize=2 HTTP/1.1
+```
+
+**Response (`200 OK`):**
+```json
+{
+  "items": [
+    {
+      "name": "34 St - Herald Sq",
+      "point": { "latitude": 40.7497, "longitude": -73.9878 }
+    },
+    {
+      "name": "34 St - Herald Sq",
+      "point": { "latitude": 40.7495, "longitude": -73.9879 }
+    }
+  ],
+  "page": 1,
+  "pageSize": 2,
+  "totalCount": 16,
+  "totalPages": 8,
+  "hasPreviousPage": false,
+  "hasNextPage": true
+}
+```
 
 ### Sample: Find Nearest Subway Entrances
 Find stations within walking distance (`0.5` miles) of Bryant Park:
