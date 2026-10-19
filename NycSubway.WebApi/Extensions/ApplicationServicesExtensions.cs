@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using NycSubway.Core.Services.GeoDistance;
 using NycSubway.Core.Services.Identity;
 using NycSubway.Core.Services.Station;
 using NycSubway.Core.Services.User;
@@ -16,6 +17,7 @@ namespace NycSubway.WebApi.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IGeoCalculator, HaversineGeoCalculator>();
             services.AddScoped<IStationRepo, StationRepo>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserDataService, UserDataService>();

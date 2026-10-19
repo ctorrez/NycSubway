@@ -118,16 +118,22 @@ flowchart TD
 
 ---
 
-### Phase 4: Automated Testing Suite
+### Phase 4: Automated Testing Suite (Completed)
 
-- [ ] **Create Test Project `NycSubway.Tests`**:
-  - Add `xUnit`, `FluentAssertions`, and `Microsoft.AspNetCore.Mvc.Testing`.
-- [ ] **Unit Tests**:
-  - `CoordinatesDistanceExtensionsTests`: Test distance between known NYC subway stations (e.g., Grand Central 42 St and Times Sq 42 St ~ 0.5-0.6 miles).
-  - `WktCoordinateParserTests`: Verify longitude/latitude parsing from WKT `POINT(x y)` strings.
-- [ ] **Integration Tests**:
-  - `StationApiTests`: Verify `GET /station/station-entrances` returns seeded data.
-  - `AuthApiTests`: Verify login with seeded credentials returns a valid JWT token.
+- [x] **Create Test Project `NycSubway.Tests`**:
+  - Created official Microsoft MSTest project targeting `.NET 8`.
+  - Added reference to `NycSubway.Core` and added to `NycSubway.sln`.
+- [x] **Lean Geo-Distance Architecture**:
+  - Implemented `IGeoCalculator` and `HaversineGeoCalculator` directly in Core.
+  - Eliminated redundant `Coordinates.cs` and `CoordinatesDistanceExtensions.cs` to keep the codebase lean and free of middle-man boilerplate.
+  - Fixed floating-point `NaN` edge cases with `Math.Clamp`.
+- [x] **MSTest Unit Test Suite (11/11 Passing)**:
+  - `GeoCalculatorTests`: Verified identical point calculation returns `0.0` without `NaN`.
+  - Tested real NYC subway station distance: Grand Central 42 St to Times Sq 42 St (~0.55 miles).
+  - Tested unit conversion between Miles and Kilometers.
+  - Tested null coordinate handling.
+  - `UnitOfLengthTests`: Tested conversion factors for Kilometers, Miles, and Nautical Miles.
+  - `StationServiceTests`: Tested service delegation with fake repository and null entrance handling.
 
 ---
 

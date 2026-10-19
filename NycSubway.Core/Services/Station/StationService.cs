@@ -13,10 +13,12 @@ namespace NycSubway.Core.Services.Station
     public class StationService : IStationService
     {
         private readonly IStationRepo _repo;
+        private readonly IGeoCalculator _geoCalculator;
 
-        public StationService(IStationRepo repo)
+        public StationService(IStationRepo repo, IGeoCalculator geoCalculator)
         {
             _repo = repo;
+            _geoCalculator = geoCalculator;
         }
 
         public async Task<List<StationEntranceModel>> GetStationEntrancesAsync()
@@ -35,10 +37,7 @@ namespace NycSubway.Core.Services.Station
                 };
             }
 
-            var c1 = new Coordinates(entrance1.Point.Latitude, entrance1.Point.Longitude);
-            var c2 = new Coordinates(entrance2.Point.Latitude, entrance2.Point.Longitude);
-
-            var distance = c1.DistanceTo(c2, UnitOfLength.Miles);
+            var distance = _geoCalculator.CalculateDistance(entrance1.Point, entrance2.Point, UnitOfLength.Miles);
 
             return new GeoDistance
             {

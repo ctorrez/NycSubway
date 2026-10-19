@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NycSubway.Database", "NycSu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NycSubway.Infrastructure", "NycSubway.Infrastructure\NycSubway.Infrastructure.csproj", "{970626E9-654C-47D9-8809-A76E0183CCA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NycSubway.Tests", "NycSubway.Tests\NycSubway.Tests.csproj", "{7F8AF83D-63C3-42CC-8066-F9E96422FDA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{970626E9-654C-47D9-8809-A76E0183CCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{970626E9-654C-47D9-8809-A76E0183CCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{970626E9-654C-47D9-8809-A76E0183CCA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F8AF83D-63C3-42CC-8066-F9E96422FDA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F8AF83D-63C3-42CC-8066-F9E96422FDA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F8AF83D-63C3-42CC-8066-F9E96422FDA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F8AF83D-63C3-42CC-8066-F9E96422FDA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
