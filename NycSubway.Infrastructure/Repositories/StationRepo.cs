@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NycSubway.Core.Entities;
 using NycSubway.Core.Services.Station;
 using NycSubway.Database.Context;
 using System.Collections.Generic;
@@ -29,6 +30,16 @@ namespace NycSubway.Infrastructure.Repositories
                         Longitude = x.Longitude
                     }
                 })
+                .ToListAsync();
+        }
+
+        public async Task<List<StationEntrance>> GetStationEntrancesInBoundingBoxAsync(
+            double minLat, double maxLat, double minLon, double maxLon)
+        {
+            return await _context.StationEntrances
+                .AsNoTracking()
+                .Where(x => x.Latitude >= minLat && x.Latitude <= maxLat &&
+                            x.Longitude >= minLon && x.Longitude <= maxLon)
                 .ToListAsync();
         }
     }

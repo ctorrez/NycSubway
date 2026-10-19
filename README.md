@@ -112,8 +112,36 @@ To test authorized endpoints, use the pre-seeded account:
 | `POST` | `/api/account/login` | No | Authenticate user and obtain a JWT Bearer token |
 | `GET` | `/station/station-entrances` | No | Retrieve all NYC subway station entrances |
 | `POST` | `/station/station-distance` | No | Calculate the great-circle distance between two stations |
+| `GET` | `/station/nearby` | No | Find nearest subway entrances within a radius (miles) |
 | `GET` | `/api/user/stations` | **JWT** | Get the authenticated user's saved stations |
 | `POST` | `/api/user/save-station` | **JWT** | Bookmark a station entrance for the authenticated user |
+
+### Sample: Find Nearest Subway Entrances
+Find stations within walking distance (`0.5` miles) of Bryant Park:
+```http
+GET /station/nearby?latitude=40.7536&longitude=-73.9832&radiusMiles=0.5&limit=3 HTTP/1.1
+```
+
+**Response (`200 OK`):**
+```json
+[
+  {
+    "name": "5 Ave - 42 St",
+    "point": { "latitude": 40.7539, "longitude": -73.9810 },
+    "distanceInMiles": 0.117
+  },
+  {
+    "name": "Times Sq - 42 St",
+    "point": { "latitude": 40.7557, "longitude": -73.9870 },
+    "distanceInMiles": 0.245
+  },
+  {
+    "name": "Grand Central - 42 St",
+    "point": { "latitude": 40.7527, "longitude": -73.9772 },
+    "distanceInMiles": 0.320
+  }
+]
+```
 
 ### Sample: Calculate Station Distance
 **Request:**
