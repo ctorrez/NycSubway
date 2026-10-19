@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NycSubway.Core.Models;
 using NycSubway.Core.Services.Station;
 using NycSubway.WebApi.Models;
 using System.Collections.Generic;
@@ -22,14 +23,24 @@ namespace NycSubway.WebApi.Controllers
         }
 
         /// <summary>
-        /// NYC Station Entrances
+        /// NYC Station Entrances with optional search filtering and pagination
         /// </summary>
-        /// <returns>List of all NYC station entrances</returns>
+        /// <param name="search">Optional search term matching station name, line, or entrance type</param>
+        /// <param name="page">Page number (1-based, default 1)</param>
+        /// <param name="pageSize">Page size (default 20, max 100)</param>
+        /// <returns>Paginated NYC station entrances</returns>
         [HttpGet("station-entrances")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntranceModel>))]
-        public async Task<IActionResult> GetStationEntrances()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<StationEntranceModel>))]
+        public async Task<IActionResult> GetStationEntrances(
+            [FromQuery] string search = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
         {
-            var entrances = await _service.GetStationEntrancesAsync();
+            if (page <= 0) page = 1;
+            if (pageSize <= 0) pageSize = 20;
+            if (pageSize > 100) pageSize = 100;
+
+            var entrances = await _service.GetStationEntrancesAsync(search, page, pageSize);
             return Ok(entrances);
         }
 
