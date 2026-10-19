@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NycSubway.Core.Entities;
+using NycSubway.Core.Models;
 using NycSubway.Core.Services.GeoDistance;
 using NycSubway.Core.Services.Station;
 using System.Collections.Generic;
@@ -18,6 +19,16 @@ namespace NycSubway.Tests.Station
             public Task<List<StationEntranceModel>> GetStationEntrancesAsync()
             {
                 return Task.FromResult(EntrancesToReturn);
+            }
+
+            public Task<PagedResult<StationEntranceModel>> GetStationEntrancesAsync(string search, int page, int pageSize)
+            {
+                var filtered = string.IsNullOrWhiteSpace(search)
+                    ? EntrancesToReturn
+                    : EntrancesToReturn.FindAll(x => x.Name.Contains(search, System.StringComparison.OrdinalIgnoreCase));
+
+                var items = filtered.GetRange((page - 1) * pageSize, Math.Min(pageSize, Math.Max(0, filtered.Count - (page - 1) * pageSize)));
+                return Task.FromResult(new PagedResult<StationEntranceModel>(items, filtered.Count, page, pageSize));
             }
 
             public Task<List<StationEntrance>> GetStationEntrancesInBoundingBoxAsync(
