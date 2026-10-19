@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NycSubway.Data.Entities;
+using NycSubway.Core.Entities;
 
 namespace NycSubway.Database.Configs
 {

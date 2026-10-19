@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using NycSubway.Database.Context;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace NycSubway.Database.Identity
                 };
                 await userManager.CreateAsync(user, "Challenge#2022");
 
-                await context.AppUsers.AddAsync(new Data.Entities.AppUser()
+                await context.AppUsers.AddAsync(new Core.Entities.AppUser()
                 {
                     Email = user.Email,
                     UserName = user.UserName,

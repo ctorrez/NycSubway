@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NycSubway.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using NycSubway.Core.Entities;
 using NycSubway.Database.Configs;
 using System;
 using System.Collections.Generic;

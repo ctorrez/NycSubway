@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NycSubway.Core.Services.Station
 {
     public interface IStationRepo
     {
-        List<StationEntranceModel> GetStationEntrances();
+        Task<List<StationEntranceModel>> GetStationEntrancesAsync();
     }
 }

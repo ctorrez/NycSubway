@@ -1,5 +1,5 @@
 using CsvHelper;
-using NycSubway.Data.Entities;
+using NycSubway.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

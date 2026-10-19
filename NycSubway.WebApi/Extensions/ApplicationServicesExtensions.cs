@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using NycSubway.Core.Services.Identity;
 using NycSubway.Core.Services.Station;
 using NycSubway.Core.Services.User;
@@ -19,7 +19,7 @@ namespace NycSubway.WebApi.Extensions
             services.AddScoped<IStationRepo, StationRepo>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserDataService, UserDataService>();
-            services.AddScoped<StationService, StationService>();
+            services.AddScoped<IStationService, StationService>();
 
             return services;
         }

@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace NycSubway.Core.Models
 {
     public class ResultResponse
@@ -9,12 +5,21 @@ namespace NycSubway.Core.Models
         public bool Success { get; set; }
         public string Message { get; set; }
 
-        public static ResultResponse SuccessResponse()
+        public static ResultResponse SuccessResponse(string message = "Ok")
         {
-            return new ResultResponse()
+            return new ResultResponse
             {
                 Success = true,
-                Message = "Ok"
+                Message = message
+            };
+        }
+
+        public static ResultResponse FailureResponse(string message)
+        {
+            return new ResultResponse
+            {
+                Success = false,
+                Message = message
             };
         }
     }

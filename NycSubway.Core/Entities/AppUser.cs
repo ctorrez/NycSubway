@@ -1,8 +1,6 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace NycSubway.Data.Entities
+namespace NycSubway.Core.Entities
 {
     public class AppUser
     {

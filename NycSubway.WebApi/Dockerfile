@@ -7,7 +7,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["NycSubway.WebApi/NycSubway.WebApi.csproj", "NycSubway.WebApi/"]
 COPY ["NycSubway.Core/NycSubway.Core.csproj", "NycSubway.Core/"]
-COPY ["NycSubway.Data/NycSubway.Data.csproj", "NycSubway.Data/"]
 COPY ["NycSubway.Database/NycSubway.Database.csproj", "NycSubway.Database/"]
 COPY ["NycSubway.Infrastructure/NycSubway.Infrastructure.csproj", "NycSubway.Infrastructure/"]
 RUN dotnet restore "NycSubway.WebApi/NycSubway.WebApi.csproj"

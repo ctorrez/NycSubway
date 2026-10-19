@@ -97,22 +97,24 @@ flowchart TD
 
 ---
 
-### Phase 3: Architectural Simplification (Minimal MVP)
+### Phase 3: Architectural Simplification (Minimal MVP) (Completed)
 
-- [ ] **Consolidate Domain Entities into `Core`**:
-  - Move `AppUser`, `StationEntrance`, and `AppUserStationEntrance` from `NycSubway.Data` into `NycSubway.Core/Entities/`.
-  - Remove redundant `NycSubway.Data` project.
-- [ ] **Merge `Database` and `Infrastructure`**:
-  - Combine DbContext and migrations into `NycSubway.Infrastructure`.
-  - Combine `IdentityContext` and `SubwayDbContext` into a unified `SubwayDbContext : IdentityDbContext<IdentityUser>` (or `IdentityDbContext<AppUser>`), eliminating double user tables and dual connection strings.
-- [ ] **Unify Station Data Flow**:
-  - Remove redundant per-request CSV parsing in `StationRepo.cs`.
-  - Have `StationRepo` query the database via EF Core.
-  - Remove duplicate CSV file from `Infrastructure/SeedData/` and keep a single embedded seed resource.
-- [ ] **Make Async the Default**:
-  - Update `IStationRepo`, `StationService`, and `IUserDataService` to use async/await (`ToListAsync()`, `FirstOrDefaultAsync()`, `SaveChangesAsync()`).
-- [ ] **Input Validation & Safe Lookups**:
-  - Update `SaveStationEntrance` to accept entrance ID (or perform safe lookup with `.FirstOrDefaultAsync()` and return proper HTTP 404 / 400 instead of throwing 500).
+- [x] **Consolidate Domain Entities into `Core`**:
+  - Moved `AppUser`, `StationEntrance`, and `AppUserStationEntrance` into `NycSubway.Core/Entities/`.
+  - Removed redundant `NycSubway.Data` project from solution and disk.
+- [x] **Keep `NycSubway.Database` with Bounded Contexts (ADR Decision)**:
+  - Preserved separate `IdentityContext` and `SubwayDbContext` for Single Responsibility Principle (SRP) and domain boundary isolation.
+  - Kept EF Core migrations, configurations, and CSV seeder isolated in `NycSubway.Database`.
+- [x] **Unify Station Data Flow & Deduplicate Seed Data**:
+  - Refactored `StationRepo` in `Infrastructure` to query `SubwayDbContext` using EF Core `AsNoTracking().ToListAsync()`.
+  - Removed per-request CSV parsing from `StationRepo`.
+  - Removed duplicate CSV file from `Infrastructure/SeedData/` and removed unused `CsvHelper` dependency from Infrastructure.
+- [x] **Make Async the Default & Dependency Abstraction**:
+  - Converted `IStationRepo`, `IStationService`, `StationService`, and `IUserDataService` to `async`/`await`.
+  - Registered and injected `IStationService` in `StationController`.
+- [x] **Input Validation & Safe Lookups**:
+  - Added null and empty checks for entrance coordinates in `StationController`.
+  - Updated `SaveStationEntranceAsync` to safely check for existing entrance, handle not found, and prevent duplicate bookmarks.
 
 ---
 

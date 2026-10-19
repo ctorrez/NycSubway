@@ -1,81 +1,35 @@
-using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 using NycSubway.Core.Services.Station;
-using System;
+using NycSubway.Database.Context;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NycSubway.Infrastructure.Repositories
 {
     public class StationRepo : IStationRepo
     {
-        public StationRepo()
-        {
+        private readonly SubwayDbContext _context;
 
+        public StationRepo(SubwayDbContext context)
+        {
+            _context = context;
         }
 
-        public List<StationEntranceModel> GetStationEntrances()
+        public async Task<List<StationEntranceModel>> GetStationEntrancesAsync()
         {
-            var stations = new List<StationEntranceModel>();
-            var csvs = GetSubwayEntranceCsvs();
-
-            foreach(var x in csvs)
-            {
-                stations.Add(new StationEntranceModel()
+            return await _context.StationEntrances
+                .AsNoTracking()
+                .Select(x => new StationEntranceModel
                 {
                     Name = x.Name,
-                    Point = GetGeoPoint(x.Geom)
-                });
-            }
-
-            return stations;
-        }
-
-        private GeoPoint GetGeoPoint(string geom)
-        {
-            // POINT (-73.86835600032798 40.84916900104506)
-
-            var values = geom.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-            var longitudeStr = values[1].Replace("(", "").Trim();
-            var latitudeStr = values[2].Replace(")", "").Trim();
-
-            return new GeoPoint()
-            {
-                Latitude = double.Parse(latitudeStr, CultureInfo.InvariantCulture),
-                Longitude = double.Parse(longitudeStr, CultureInfo.InvariantCulture)
-            };
-        }
-
-        private static List<SubwayEntranceCsv> GetSubwayEntranceCsvs()
-        {
-            var data = ReadResource("DOITT_SUBWAY_ENTRANCE_01_13SEPT2010.csv");
-
-            using (var reader = new StringReader(data))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                csv.Context.RegisterClassMap<SubwayEntranceCsvMap>();
-
-                var records = csv.GetRecords<SubwayEntranceCsv>().ToList();
-
-                return records;
-            }
-        }
-
-        private static string ReadResource(string name)
-        {
-            // https://stackoverflow.com/questions/3314140/how-to-read-embedded-resource-text-file
-            var assembly = Assembly.GetExecutingAssembly();
-            string resourcePath = assembly.GetManifestResourceNames()
-                    .First(str => str.EndsWith(name));
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
+                    Point = new GeoPoint
+                    {
+                        Latitude = x.Latitude,
+                        Longitude = x.Longitude
+                    }
+                })
+                .ToListAsync();
         }
     }
 }

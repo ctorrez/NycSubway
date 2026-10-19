@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NycSubway.Core.Services.Station;
 using NycSubway.WebApi.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NycSubway.WebApi.Controllers
 {
@@ -13,32 +14,41 @@ namespace NycSubway.WebApi.Controllers
     [Route("station")]
     public class StationController : ControllerBase
     {
-        private StationService service;
+        private readonly IStationService _service;
 
-        public StationController(StationService service)
+        public StationController(IStationService service)
         {
-            this.service = service;
+            _service = service;
         }
 
         /// <summary>
         /// NYC Station Entrances
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of all NYC station entrances</returns>
         [HttpGet("station-entrances")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntranceModel>))]
-        public IActionResult GetStationEntrances()
+        public async Task<IActionResult> GetStationEntrances()
         {
-            return Ok(service.GetStationEntrances());
+            var entrances = await _service.GetStationEntrancesAsync();
+            return Ok(entrances);
         }
 
         /// <summary>
         /// Get the distance between two station entrances
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The two station entrances</param>
+        /// <returns>Distance calculation result</returns>
         [HttpPost("station-distance")]
-        public IActionResult GetStationDistance(StationDistanceRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GeoDistance))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetStationDistance([FromBody] StationDistanceRequest request)
         {
-            return Ok(service.GetStationDistance(request.Entrance1, request.Entrance2));
+            if (request?.Entrance1?.Point == null || request?.Entrance2?.Point == null)
+            {
+                return BadRequest("Both entrances and their coordinates are required.");
+            }
+
+            return Ok(_service.GetStationDistance(request.Entrance1, request.Entrance2));
         }
     }
 }

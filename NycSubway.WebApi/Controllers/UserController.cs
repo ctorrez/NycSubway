@@ -1,72 +1,97 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NycSubway.Core.Models;
 using NycSubway.Core.Services.Station;
 using NycSubway.Core.Services.User;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace NycSubway.WebApi.Controllers
 {
     /// <summary>
     /// User Action Controller
     /// </summary>
-    [Authorize()]
+    [Authorize]
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        private readonly IUserDataService service;
+        private readonly IUserDataService _service;
 
         public UserController(IUserDataService userDataService)
         {
-            service = userDataService;
+            _service = userDataService;
         }
 
         /// <summary>
-        /// Retrieve a user’s frequently used station entrances
+        /// Retrieve the authenticated user’s frequently used station entrances
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of saved station entrances</returns>
         [HttpGet("stations")]
-        public IActionResult GetStations()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StationEntranceModel>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetStations()
         {
-            var user = HttpContext.User;
+            var email = User.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
 
-            if (user == null)
+            if (string.IsNullOrEmpty(email))
             {
-                return BadRequest("Bad Request");
+                return Unauthorized();
             }
 
-            var email = user.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            var userModel = await _service.GetUserReadModelAsync(email);
 
-            var userModel = service.GetUserReadModel(email);
+            if (userModel == null)
+            {
+                return NotFound("User profile not found.");
+            }
 
-            var stations = service.GetStationEntrances(userModel);
+            var stations = await _service.GetStationEntrancesAsync(userModel);
 
             return Ok(stations);
         }
 
         /// <summary>
-        /// Save a user’s frequently used station entrances
+        /// Save a station entrance to the authenticated user's frequent list
         /// </summary>
-        /// <param name="entrance"></param>
-        /// <returns></returns>
+        /// <param name="entrance">Station entrance to bookmark</param>
+        /// <returns>Result of the save operation</returns>
         [HttpPost("save-station")]
-        public IActionResult SaveStation(StationEntranceModel entrance)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> SaveStation([FromBody] StationEntranceModel entrance)
         {
-            var user = HttpContext.User;
-
-            if (user == null)
+            if (entrance == null || string.IsNullOrWhiteSpace(entrance.Name))
             {
-                return BadRequest();
+                return BadRequest(ResultResponse.FailureResponse("A valid station entrance name is required."));
             }
 
-            var email = user.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            var email = User.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
 
-            var userModel = service.GetUserReadModel(email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
 
-            var response = service.SaveStationEntrance(userModel, entrance);
+            var userModel = await _service.GetUserReadModelAsync(email);
+
+            if (userModel == null)
+            {
+                return NotFound("User profile not found.");
+            }
+
+            var response = await _service.SaveStationEntranceAsync(userModel, entrance);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
 
             return Ok(response);
         }

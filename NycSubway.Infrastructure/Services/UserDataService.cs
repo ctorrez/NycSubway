@@ -1,84 +1,116 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using NycSubway.Core.Entities;
 using NycSubway.Core.Models;
 using NycSubway.Core.Services.Station;
 using NycSubway.Core.Services.User;
-using NycSubway.Data.Entities;
 using NycSubway.Database.Context;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NycSubway.Infrastructure.Services
 {
     public class UserDataService : IUserDataService
     {
-        private SubwayDbContext _context;
+        private readonly SubwayDbContext _context;
 
         public UserDataService(SubwayDbContext context)
         {
             _context = context;
         }
 
-        public List<StationEntranceModel> GetStationEntrances(UserReadModel model)
+        public async Task<UserReadModel> GetUserReadModelAsync(string email)
         {
-            var user = _context.AppUsers.First(x => x.UserName == model.UserName);
+            var user = await _context.AppUsers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Email == email);
 
-            var entrances = _context
-                .AppUserStationEntrances
-                .Include(x => x.StationEntrance)
-                .Where(x => x.AppUserId == user.Id)
-                .Select(x => x.StationEntrance)
-                .ToList();
-
-            return Project(entrances);
-        }
-
-        private List<StationEntranceModel> Project(List<StationEntrance> entrances)
-        {
-            var models = new List<StationEntranceModel>();
-
-            foreach(var x in entrances)
+            if (user == null)
             {
-                models.Add(new StationEntranceModel()
-                {
-                    Name = x.Name,
-                    Point = new GeoPoint()
-                    {
-                        Latitude = x.Latitude,
-                        Longitude = x.Longitude
-                    }
-                });
+                return null;
             }
 
-            return models;
-        }
-
-        public UserReadModel GetUserReadModel(string email)
-        {
-            var user = _context.AppUsers.First(x => x.Email == email);
-
-            return new UserReadModel()
+            return new UserReadModel
             {
                 Email = user.Email,
                 UserName = user.UserName
             };
         }
 
-        public ResultResponse SaveStationEntrance(UserReadModel model, StationEntranceModel entranceModel)
+        public async Task<List<StationEntranceModel>> GetStationEntrancesAsync(UserReadModel model)
         {
-            var user = _context.AppUsers.First(x => x.UserName == model.UserName);
+            if (model == null)
+            {
+                return new List<StationEntranceModel>();
+            }
 
-            var entrance = _context.StationEntrances.First(x => x.Name == entranceModel.Name);
+            var user = await _context.AppUsers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserName == model.UserName);
 
-            _context.AppUserStationEntrances.Add(new AppUserStationEntrance()
+            if (user == null)
+            {
+                return new List<StationEntranceModel>();
+            }
+
+            var entrances = await _context.AppUserStationEntrances
+                .AsNoTracking()
+                .Where(x => x.AppUserId == user.Id)
+                .Select(x => x.StationEntrance)
+                .Select(x => new StationEntranceModel
+                {
+                    Name = x.Name,
+                    Point = new GeoPoint
+                    {
+                        Latitude = x.Latitude,
+                        Longitude = x.Longitude
+                    }
+                })
+                .ToListAsync();
+
+            return entrances;
+        }
+
+        public async Task<ResultResponse> SaveStationEntranceAsync(UserReadModel model, StationEntranceModel entranceModel)
+        {
+            if (model == null || entranceModel == null || string.IsNullOrWhiteSpace(entranceModel.Name))
+            {
+                return ResultResponse.FailureResponse("Invalid request data.");
+            }
+
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(x => x.UserName == model.UserName);
+
+            if (user == null)
+            {
+                return ResultResponse.FailureResponse("User not found.");
+            }
+
+            var entrance = await _context.StationEntrances
+                .FirstOrDefaultAsync(x => x.Name == entranceModel.Name);
+
+            if (entrance == null)
+            {
+                return ResultResponse.FailureResponse($"Station entrance '{entranceModel.Name}' was not found.");
+            }
+
+            var alreadySaved = await _context.AppUserStationEntrances
+                .AnyAsync(x => x.AppUserId == user.Id && x.StationEntranceId == entrance.Id);
+
+            if (alreadySaved)
+            {
+                return ResultResponse.SuccessResponse("Station entrance is already saved.");
+            }
+
+            await _context.AppUserStationEntrances.AddAsync(new AppUserStationEntrance
             {
                 AppUserId = user.Id,
-                StationEntranceId = entrance.Id,
+                StationEntranceId = entrance.Id
             });
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return ResultResponse.SuccessResponse();
+            return ResultResponse.SuccessResponse("Station entrance saved successfully.");
         }
     }
 }
