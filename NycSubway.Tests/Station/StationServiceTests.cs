@@ -33,8 +33,7 @@ namespace NycSubway.Tests.Station
                 return Task.FromResult(new PagedResult<StationEntranceModel>(items, filtered.Count, page, pageSize));
             }
 
-            public Task<List<StationEntrance>> GetStationEntrancesInBoundingBoxAsync(
-                double minLat, double maxLat, double minLon, double maxLon)
+            public Task<List<StationEntrance>> GetStationEntrancesInBoundingBoxAsync(GeoBoundingBox box)
             {
                 return Task.FromResult(BoundingBoxEntrancesToReturn);
             }

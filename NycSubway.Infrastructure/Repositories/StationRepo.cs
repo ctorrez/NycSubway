@@ -69,13 +69,12 @@ namespace NycSubway.Infrastructure.Repositories
             return new PagedResult<StationEntranceModel>(items, totalCount, page, pageSize);
         }
 
-        public async Task<List<StationEntrance>> GetStationEntrancesInBoundingBoxAsync(
-            double minLat, double maxLat, double minLon, double maxLon)
+        public async Task<List<StationEntrance>> GetStationEntrancesInBoundingBoxAsync(GeoBoundingBox box)
         {
             return await _context.StationEntrances
                 .AsNoTracking()
-                .Where(x => x.Latitude >= minLat && x.Latitude <= maxLat &&
-                            x.Longitude >= minLon && x.Longitude <= maxLon)
+                .Where(x => x.Latitude >= box.MinLatitude && x.Latitude <= box.MaxLatitude &&
+                            x.Longitude >= box.MinLongitude && x.Longitude <= box.MaxLongitude)
                 .ToListAsync();
         }
     }
